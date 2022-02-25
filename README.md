@@ -22,7 +22,7 @@ Android : - Add below Permissions to your manifist.xml file -
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 ```
 
-## This plugin depends on permission_handler package so please import this package in yaml file
+This plugin depends on [permission_handler] package so please import this package in yaml file
 
 ``` yaml
     permission_handler: ^9.2.0
