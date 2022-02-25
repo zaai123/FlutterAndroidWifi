@@ -22,15 +22,15 @@ Android : - Add below Permissions to your manifist.xml file -
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 ```
 
-#This plugin depends on permission_handler package so please import this package in yaml file
+## This plugin depends on permission_handler package so please import this package in yaml file
 
 ``` yaml
     permission_handler: ^9.2.0
 ```
 
 Initialize plugin to request location permissions inti() method return boolean 
-#true if permission is granted 
-#false is permission is denied
+## true if permission is granted 
+## false is permission is denied
 
 ``` dart
      init() async {
