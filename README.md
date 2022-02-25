@@ -29,8 +29,8 @@ Android : - Add below Permissions to your manifist.xml file -
 ```
 
 Initialize plugin to request location permissions inti() method return boolean 
-# true if permission is granted 
-# false is permission is denied
+- true if permission is granted 
+- false is permission is denied
 
 ``` dart
      init() async {
