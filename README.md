@@ -51,7 +51,8 @@ Get Wifi access point list Object WifiNetwork contains almost every inforamtion 
 ```
 
 Check if connection is fast or slow
-
+- Returns true if connection is fast
+- Returns false if connection is slow
 ```dart
     isConnectionFast() {
       print(AndroidFlutterWifi.isConnectionFast());
@@ -59,7 +60,7 @@ Check if connection is fast or slow
 ```
 
 Check your connection type
-Return 2 types of connection WI-FI or Cellular
+- Return 2 types of connection WI-FI or Cellular
 
 ```dart
   getConnectionType(){
@@ -67,7 +68,12 @@ Return 2 types of connection WI-FI or Cellular
   }
 ```
 Get information about your wifi connection 
-ActiveWifiNetwork object contains every available information like IP address, name, security, etc
+- ActiveWifiNetwork object contains every available information like 
+  - IP address, 
+  - Name
+  - SSID
+  - MAC Addess
+  - etc
 ```` dart
     getActiveWifiNetwork() async {
         ActiveWifiNetwork activeWifiNetwork = await AndroidFlutterWifi.getActiveWifiInfo();
