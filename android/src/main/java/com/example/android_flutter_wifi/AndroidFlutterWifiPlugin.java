@@ -1,5 +1,10 @@
 package com.example.android_flutter_wifi;
 
+import static com.example.android_flutter_wifi.constants.Constants.DISABLE_WIFI_CALL;
+import static com.example.android_flutter_wifi.constants.Constants.ENABLE_WIFI_CALL;
+import static com.example.android_flutter_wifi.constants.Constants.IS_WIFI_ENABLED_CALL;
+import static com.example.android_flutter_wifi.constants.Constants.WIFI_LIST_CALL;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -54,14 +59,20 @@ public class AndroidFlutterWifiPlugin implements FlutterPlugin, MethodCallHandle
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals(Constants.WIFI_INFO_CALL)) {
             result.success(getWifiInfo());
-        } else if (call.method.equals(Constants.WIFI_LIST_CALL)) {
+        } else if (call.method.equals(WIFI_LIST_CALL)) {
             result.success(getWifiScanResult());
         } else if (call.method.equals(Constants.IS_CONNECTED_CALL)) {
-                result.success(isConnected());
+            result.success(isConnected());
         } else if (call.method.equals(Constants.IS_CONNECTION_FAST)) {
             result.success(isConnectionFast());
         } else if (call.method.equals(Constants.CONNECTION_TYPE_CALL)) {
             result.success(getConnectionType());
+        } else if (call.method.equals(ENABLE_WIFI_CALL)) {
+            enableWifi();
+        } else if (call.method.equals(DISABLE_WIFI_CALL)) {
+            disableWifi();
+        } else if (call.method.equals(IS_WIFI_ENABLED_CALL)) {
+            result.success(isWifiEnabled());
         } else {
             result.notImplemented();
         }
@@ -114,7 +125,7 @@ public class AndroidFlutterWifiPlugin implements FlutterPlugin, MethodCallHandle
             map.put("ip", String.valueOf(wifiInfo.getIpAddress()));
             map.put("link_speed", String.valueOf(wifiInfo.getLinkSpeed()));
             map.put("network_id", String.valueOf(wifiInfo.getNetworkId()));
-            return  map;
+            return map;
         } else {
             return null;
         }
@@ -130,7 +141,7 @@ public class AndroidFlutterWifiPlugin implements FlutterPlugin, MethodCallHandle
             map.put("ssid", scanResult.SSID);
             map.put("bssid", scanResult.BSSID);
             map.put("security", scanResult.capabilities);
-            map.put("signal_level", String.valueOf(scanResult.level));
+            map.put("signal_level", String.valueOf(calculateSignalLevel(scanResult.level, 5) + 1));
             map.put("frequency", String.valueOf(scanResult.frequency));
             map.put("level", String.valueOf(scanResult.level));
             wifiMapList.add(map);
@@ -185,6 +196,33 @@ public class AndroidFlutterWifiPlugin implements FlutterPlugin, MethodCallHandle
         } else {
             return false;
         }
+    }
+
+    public void enableWifi() {
+        wifiManager.setWifiEnabled(true);
+
+    }
+
+    public void disableWifi() {
+        wifiManager.setWifiEnabled(false);
+    }
+
+    public boolean isWifiEnabled() {
+        return wifiManager.isWifiEnabled();
+    }
+
+    public int calculateSignalLevel(int rssi, int numLevels) {
+        if (rssi <= -100) {
+            return 0;
+        } else if (rssi >= -55) {
+            return numLevels - 1;
+        } else {
+            float inputRange = (-55 - -100);
+            float outputRange = (numLevels - 1);
+            if (inputRange != 0)
+                return (int) ((float) (rssi - -100) * outputRange / inputRange);
+        }
+        return 0;
     }
 
     @Override
