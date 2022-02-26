@@ -39,6 +39,9 @@ Initialize plugin to request location permissions inti() method return boolean
 ```
 
 Get Wifi access point list Object WifiNetwork contains almost every inforamtion avaiable on AP
+- Signal level
+  - 5 is maximum
+  - 0 is minimum
 
 ``` dart
      getWifiList() async {
@@ -79,6 +82,29 @@ Get information about your wifi connection
         ActiveWifiNetwork activeWifiNetwork = await AndroidFlutterWifi.getActiveWifiInfo();
     }
 ````
+Enable Wifi
+``` dart
+ static Future<void> enableWifi() async {
+    await _channel.invokeMethod(_ENABLE_WIFI_CALL);
+  }
+```
+
+Disable Wifi
+``` dart
+static Future<void> disableWifi() async {
+    await _channel.invokeMethod(_DISABLE_WIFI_CALL);
+  }
+```
+
+Check if WI-FI is enable on your device
+- Returns true if WIFI is enabled
+- Return false is WIFI is disabled
+``` dart
+static Future<bool> isWifiEnabled() async {
+    bool isWifiEnabled = await _channel.invokeMethod(_IS_WIFI_ENABLED_CALL);
+    return isWifiEnabled;
+  }
+```
 
 This project is a starting point for a Flutter
 [plug-in package](https://flutter.dev/developing-packages/), a specialized package that includes
