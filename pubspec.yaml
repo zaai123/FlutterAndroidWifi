@@ -1,6 +1,6 @@
 name: android_flutter_wifi
 description: A new Flutter project.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/zaai123/FlutterAndroidWifi
 
 environment:

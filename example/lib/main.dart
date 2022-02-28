@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:android_flutter_wifi/android_flutter_wifi.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,10 +20,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     init();
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,25 +38,28 @@ class _MyAppState extends State<MyApp> {
 
   void init() async {
     await AndroidFlutterWifi.init();
+    var isConnected = await AndroidFlutterWifi.isConnected();
+    print('Is connected: ${isConnected.toString()}');
   }
 
   void getWifiList() async {
     List<WifiNetwork> wifiList = await AndroidFlutterWifi.getWifiScanResult();
-    if(wifiList.isNotEmpty){
+    if (wifiList.isNotEmpty) {
       WifiNetwork wifiNetwork = wifiList[0];
       print('Name: ${wifiNetwork.ssid}');
     }
   }
 
-  isConnectionFast(){
+  isConnectionFast() {
     print(AndroidFlutterWifi.isConnectionFast());
   }
 
-  getConnectionType(){
+  getConnectionType() {
     print(AndroidFlutterWifi.getConnectionType());
   }
 
   getActiveWifiNetwork() async {
-    ActiveWifiNetwork activeWifiNetwork = await AndroidFlutterWifi.getActiveWifiInfo();
+    ActiveWifiNetwork activeWifiNetwork =
+        await AndroidFlutterWifi.getActiveWifiInfo();
   }
 }

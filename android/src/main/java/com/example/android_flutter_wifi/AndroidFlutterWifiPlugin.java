@@ -8,16 +8,12 @@ import static com.example.android_flutter_wifi.constants.Constants.WIFI_LIST_CAL
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import com.example.android_flutter_wifi.constants.Constants;
 
@@ -54,7 +50,6 @@ public class AndroidFlutterWifiPlugin implements FlutterPlugin, MethodCallHandle
         cm = (ConnectivityManager) mContext.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         if (call.method.equals(Constants.WIFI_INFO_CALL)) {
@@ -81,37 +76,42 @@ public class AndroidFlutterWifiPlugin implements FlutterPlugin, MethodCallHandle
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private boolean isConnectionFast() {
-        Network network = cm.getActiveNetwork();
-        NetworkInfo networkInfo = cm.getNetworkInfo(network);
-        return isConnectionFast(networkInfo.getType(), networkInfo.getSubtype());
+        Network network = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            network = cm.getActiveNetwork();
+            int downSpeed = cm.getNetworkCapabilities(network).getLinkDownstreamBandwidthKbps();
+            int upSpeed = cm.getNetworkCapabilities(network).getLinkUpstreamBandwidthKbps();
+            if (downSpeed <= 550) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return isConnectionFast(cm.getActiveNetworkInfo().getType(), cm.getActiveNetworkInfo().getSubtype());
+        }
+
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private String getConnectionType() {
-
-        Network network = cm.getActiveNetwork();
-        if (network != null) {
-            NetworkCapabilities nc = cm.getNetworkCapabilities(network);
-            if (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+        try {
+            if (cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI) {
                 return "wifi";
-            } else {
+            } else if (cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_MOBILE) {
                 return "mobile";
+            } else {
+                return "Not found";
             }
-        } else {
-
-            return "Not found";
+        } catch (Exception e) {
+            return "Not Found";
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public boolean isConnected() {
-        Network network = cm.getActiveNetwork();
-        if (network != null) {
-            return true;
-        } else {
+        try {
+            return cm.getActiveNetworkInfo().isConnected();
+        } catch (Exception e) {
             return false;
         }
     }
@@ -224,6 +224,7 @@ public class AndroidFlutterWifiPlugin implements FlutterPlugin, MethodCallHandle
         }
         return 0;
     }
+
 
     @Override
     public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
