@@ -1,10 +1,10 @@
 name: android_flutter_wifi
 description: Wifi plugin only for Android
-version: 0.1.2
+version: 0.1.4
 homepage: https://github.com/zaai123/FlutterAndroidWifi
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: ">=2.16.0 <4.0.0"
   flutter: ">=2.5.0"
 
 dependencies:

@@ -27,3 +27,12 @@ Connecting network with password improved
 
 ## 0.1.2
 Connecting network with password improved
+
+## 0.1.3
+Gradle plugin updated
+
+## 0.1.4
+* Fix ANR crash caused by infinite scan loop in BroadcastReceiver.
+* Offload all Wi-Fi Binder and system service calls to a background HandlerThread to prevent UI thread blocking.
+* Add null safety and exception handling to Wi-Fi scan results, configured networks, and DHCP queries.
+* Properly cleanup worker thread on engine detachment.
